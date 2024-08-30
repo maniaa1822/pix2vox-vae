@@ -9,7 +9,7 @@ import os
 from mpl_toolkits.mplot3d import Axes3D
 
 
-def get_volume_views_original(volume, save_dir, n_itr):
+def get_volume_views(volume, save_dir, n_itr):
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
 
@@ -25,7 +25,7 @@ def get_volume_views_original(volume, save_dir, n_itr):
     return cv2.imread(save_path)
 
 
-def get_volume_views(volume, save_dir, n_itr):
+def get_volume_views_modified(volume, save_dir, n_itr):
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
 

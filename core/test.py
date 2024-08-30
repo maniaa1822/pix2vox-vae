@@ -51,6 +51,12 @@ def test_net(cfg,
              merger=None):
     # Enable the inbuilt cudnn auto-tuner to find the best algorithm to use
     torch.backends.cudnn.benchmark = True
+    
+    # Set up TensorBoard writer
+    if test_writer is None:
+        output_dir = os.path.join(cfg.DIR.OUT_PATH, '%s', dt.now().isoformat())
+        log_dir = output_dir % 'images'
+        test_writer = SummaryWriter(log_dir)
 
     # Load taxonomies of dataset
     taxonomies = []
@@ -117,7 +123,7 @@ def test_net(cfg,
     decoder.eval()
     refiner.eval()
     merger.eval()
-
+    
     for sample_idx, (taxonomy_id, sample_name, rendering_images, ground_truth_volume) in enumerate(test_data_loader):
         taxonomy_id = taxonomy_id[0] if isinstance(taxonomy_id[0], str) else taxonomy_id[0].item()
         sample_name = sample_name[0]
@@ -173,11 +179,11 @@ def test_net(cfg,
                 gv = generated_volume.cpu().numpy()
                 rendering_views = utils.binvox_visualization.get_volume_views(gv, os.path.join(img_dir, 'test'),
                                                                               epoch_idx)
-                test_writer.image('Test Sample#%02d/Volume Reconstructed' % sample_idx, rendering_views, epoch_idx)
+                test_writer.add_image('Test Sample#%02d/Volume Reconstructed' % sample_idx, rendering_views, epoch_idx)
                 gtv = ground_truth_volume.cpu().numpy()
                 rendering_views = utils.binvox_visualization.get_volume_views(gtv, os.path.join(img_dir, 'test'),
                                                                               epoch_idx)
-                test_writer.image('Test Sample#%02d/Volume GroundTruth' % sample_idx, rendering_views, epoch_idx)
+                test_writer.add_image('Test Sample#%02d/Volume GroundTruth' % sample_idx, rendering_views, epoch_idx)
 
             # Print sample loss and IoU
             print('[INFO] %s Test[%d/%d] Taxonomy = %s Sample = %s EDLoss = %.4f KLDiv = %.4f RLoss = %.4f IoU = %s' %
