@@ -1,6 +1,6 @@
 output/checkpoints
 dataset/
-.ShapeNetRendering/
-*.venv/
-*._pycache_/
+ShapeNetRendering/
+.venv/
+_pycache_/
 output/logs/
