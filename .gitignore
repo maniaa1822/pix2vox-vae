@@ -1,0 +1,5 @@
+
+dataset/
+.ShapeNetRendering/
+*.venv/
+*._pycache_/
