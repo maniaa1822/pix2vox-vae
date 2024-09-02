@@ -13,7 +13,7 @@ import torch.nn as nn
 import torchvision
 
 class Encoder(nn.Module):
-    def __init__(self, cfg, latent_dim=128):
+    def __init__(self, cfg, latent_dim=64):
         super(Encoder, self).__init__()
         self.cfg = cfg
         self.latent_dim = latent_dim

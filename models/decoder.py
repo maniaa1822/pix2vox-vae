@@ -7,7 +7,7 @@ import torch.nn as nn
 
 
 class Decoder(nn.Module):
-    def __init__(self, cfg, latent_dim=128):
+    def __init__(self, cfg, latent_dim=64):
         super(Decoder, self).__init__()
         self.cfg = cfg
         self.latent_dim = latent_dim

@@ -200,7 +200,8 @@ def train_net(cfg):
 
             # VAE loss: reconstruction + KL divergence
             reconstruction_loss = bce_loss(generated_volumes, ground_truth_volumes) * 10
-            kl_divergence = -0.5 * torch.sum(1 + log_sigma - mu.pow(2) - log_sigma.exp())
+            kl_divergence = -0.5 * torch.sum(1 + log_sigma - mu.pow(2) - log_sigma.exp()) * 0.0001
+            #clipping the loss
             encoder_loss = reconstruction_loss + kl_divergence
 
             if cfg.NETWORK.USE_REFINER and epoch_idx >= cfg.TRAIN.EPOCH_START_USE_REFINER:
