@@ -76,10 +76,17 @@ def train_net(cfg):
     print('[DEBUG] %s Parameters in Merger: %d.' % (dt.now(), utils.network_utils.count_parameters(merger)))
 
     # Initialize weights of networks
-    encoder.apply(utils.network_utils.init_weights)
-    decoder.apply(utils.network_utils.init_weights)
-    refiner.apply(utils.network_utils.init_weights)
-    merger.apply(utils.network_utils.init_weights)
+    def init_kaiming(module):
+        if isinstance(module, nn.Linear) or isinstance(module, nn.Conv2d):
+            nn.init.kaiming_uniform_(module.weight.data, a=0, mode='fan_in', nonlinearity='relu')
+            if module.bias is not None:
+                module.bias.data.zero_()
+
+        # Apply Kaiming initialization to the VAE modules
+        encoder.apply(init_kaiming)
+        decoder.apply(init_kaiming)
+        refiner.apply(init_kaiming)
+        merger.apply(init_kaiming)
 
     # Set up solver
     if cfg.TRAIN.POLICY == 'adam':
