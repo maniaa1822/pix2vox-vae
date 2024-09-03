@@ -12,11 +12,16 @@ cfg                                         = __C
 #
 __C.DATASETS                                = edict()
 __C.DATASETS.SHAPENET                       = edict()
-__C.DATASETS.SHAPENET.TAXONOMY_FILE_PATH    = '/home/matteo/AI and Robotics/CV/pix2vox-gen/datasets/ShapeNet-f.json'
+__C.DATASETS.SHAPENET.TAXONOMY_FILE_PATH    = '/home/matteo/AI_and_Robotics/CV/pix2vox-gen/datasets/ShapeNet copy.json'
+#kaggle datasets directory
+
 # __C.DATASETS.SHAPENET.TAXONOMY_FILE_PATH  = './datasets/PascalShapeNet.json'
-__C.DATASETS.SHAPENET.RENDERING_PATH        = '/home/matteo/AI and Robotics/CV/datasets/ShapeNetRendering/%s/%s/rendering/%02d.png'
+__C.DATASETS.SHAPENET.RENDERING_PATH        = '/home/matteo/AI_and_Robotics/CV/datasets/ShapeNetRendering/%s/%s/rendering/%02d.png'
+#kaggle datasets directory
+
 # __C.DATASETS.SHAPENET.RENDERING_PATH      = '/home/hzxie/Datasets/ShapeNet/PascalShapeNetRendering/%s/%s/render_%04d.jpg'
-__C.DATASETS.SHAPENET.VOXEL_PATH            = '/home/matteo/AI and Robotics/CV/datasets/ShapeNetVox32/%s/%s/model.binvox'
+#kaggle datasets directory
+__C.DATASETS.SHAPENET.VOXEL_PATH            = '/home/matteo/AI_and_Robotics/CV/datasets/ShapeNetVox32/%s/%s/model.binvox'
 
 __C.DATASETS.PASCAL3D                       = edict()
 __C.DATASETS.PASCAL3D.TAXONOMY_FILE_PATH    = './datasets/Pascal3D.json'
