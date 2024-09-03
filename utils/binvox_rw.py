@@ -176,7 +176,7 @@ def read_as_coord_array(fp, fix_coords=True):
     end_indices = np.cumsum(counts)
     indices = np.concatenate(([0], end_indices[:-1])).astype(end_indices.dtype)
 
-    values = values.astype(np.bool)
+    values = values.astype(np.bool_)
     indices = indices[values]
     end_indices = end_indices[values]
 
@@ -212,7 +212,7 @@ def dense_to_sparse(voxel_data, dtype=int):
     return np.asarray(np.nonzero(voxel_data), dtype)
 
 
-def sparse_to_dense(voxel_data, dims, dtype=np.bool):
+def sparse_to_dense(voxel_data, dims, dtype=np.bool_):
     if voxel_data.ndim != 2 or voxel_data.shape[0] != 3:
         raise ValueError('[ERROR] voxel_data is wrong shape; should be 3xN array.')
     if np.isscalar(dims):
