@@ -14,7 +14,7 @@ __C.DATASETS                                = edict()
 __C.DATASETS.SHAPENET                       = edict()
 
 #kaggle datasets directory (gabriele)
-__C.DATASETS.SHAPENET.TAXONOMY_FILE_PATH    = '/datasets/ShapeNet.json'
+__C.DATASETS.SHAPENET.TAXONOMY_FILE_PATH    = '/kaggle/working/pix2vox-vae/datasets/ShapeNet.json'
 #matteo datasets directory
 #__C.DATASETS.SHAPENET.TAXONOMY_FILE_PATH    = '/home/matteo/AI_and_Robotics/CV/pix2vox-gen/datasets/ShapeNet copy.json'
 
