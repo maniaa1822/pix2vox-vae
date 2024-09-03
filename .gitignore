@@ -4,3 +4,4 @@ ShapeNetRendering/
 .venv/
 _pycache_/
 output/logs/
+pix2vox-gen.code-workspace
