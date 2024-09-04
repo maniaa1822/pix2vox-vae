@@ -176,14 +176,38 @@ def test_net(cfg,
             if output_dir and sample_idx < 3:
                 img_dir = output_dir % 'images'
                 # Volume Visualization
-                #gv = generated_volume.cpu().numpy()
-                #rendering_views = utils.binvox_visualization.get_volume_views(gv, os.path.join(img_dir, 'test'),
-                #                                                              epoch_idx)
-                #test_writer.add_image('Test Sample#%02d/Volume Reconstructed' % sample_idx, rendering_views, epoch_idx)
+                gv = generated_volume.cpu().numpy()
+                #rendering_views = utils.binvox_visualization.get_volume_views(gv, os.path.join(img_dir, 'test'),epoch_idx)
+                #rendering_views = utils.binvox_visualization.get_volume_views_cv2(gv)
+                #img = Image.fromarray(rendering_views)
+                #img_tensor = np.array(img)
+                #convert the array from (480,640,3) to (3,480,640)
+                #img_tensor = np.swapaxes(img_tensor, 2, 0)
+                #img_tensor = torch.from_numpy(img_tensor)
+                #convert the numpy array to an image that can be used by tensorboard
+                #test_writer.add_image('Test Sample#%02d/Volume Reconstructed' % sample_idx, img_tensor, epoch_idx)
+                # Ground Truth Visualization
                 #gtv = ground_truth_volume.cpu().numpy()
-                #rendering_views = utils.binvox_visualization.get_volume_views(gtv, os.path.join(img_dir, 'test'),
-                #                                                              epoch_idx)
-                #test_writer.add_image('Test Sample#%02d/Volume GroundTruth' % sample_idx, rendering_views, epoch_idx)
+                #rendering_views = utils.binvox_visualization.get_volume_views_cv2(gv)
+                #img = Image.fromarray(rendering_views)
+                #img_tensor = np.array(img)
+                #convert the array from (480,640,3) to (3,480,640)
+                #img_tensor = np.swapaxes(img_tensor, 2, 0)
+                #img_tensor = torch.from_numpy(img_tensor)
+                #convert the numpy array to an image that can be used by tensorboard
+                #test_writer.add_image('Test Sample#%02d/Volume Reconstructed' % sample_idx, img_tensor, epoch_idx)
+                
+                
+                rendering_views = utils.binvox_visualization.get_volume_views_cv2(gv, os.path.join(img_dir, 'test'),epoch_idx)
+                rendering_views = np.swapaxes(rendering_views, 2, 0)
+                test_writer.add_image('Test Sample#%02d/Volume Reconstructed' % sample_idx, rendering_views, epoch_idx)
+                
+                
+                
+                gtv = ground_truth_volume.cpu().numpy()
+                rendering_views = utils.binvox_visualization.get_volume_views_cv2(gtv, os.path.join(img_dir, 'test'),epoch_idx)
+                rendering_views = np.swapaxes(rendering_views, 2, 0)
+                test_writer.add_image('Test Sample#%02d/Volume GroundTruth' % sample_idx, rendering_views, epoch_idx)
 
             # Print sample loss and IoU
             print('[INFO] %s Test[%d/%d] Taxonomy = %s Sample = %s EDLoss = %.4f KLDiv = %.4f RLoss = %.4f IoU = %s' %
