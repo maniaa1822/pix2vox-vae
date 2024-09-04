@@ -39,7 +39,8 @@ def get_args_from_command_line():
                         default=cfg.CONST.BATCH_SIZE,
                         type=int)
     parser.add_argument('--epoch', dest='epoch', help='number of epoches', default=cfg.TRAIN.NUM_EPOCHES, type=int)
-    parser.add_argument('--weights', dest='weights', help='Initialize network from the weights file', default='/home/matteo/AI_and_Robotics/CV/pix2vox-gen/output/kaggle_checkpoints/best-ckpt.pth')
+    parser.add_argument('--weights', dest='weights', help='Initialize network from the weights file', default=None)
+    #default='/home/matteo/AI_and_Robotics/CV/pix2vox-gen/output/kaggle_checkpoints/best-ckpt.pth'
     parser.add_argument('--out', dest='out_path', help='Set output path', default=cfg.DIR.OUT_PATH)
     args = parser.parse_args()
     return args
