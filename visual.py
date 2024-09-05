@@ -24,7 +24,7 @@ decoder = Decoder(cfg)
 refiner = Refiner(cfg)
 merger = Merger(cfg)
 
-cfg.CONST.WEIGHTS = '/home/matteo/AI and Robotics/CV/pix2vox-gen/output/checkpoints/2024-09-02T15:16:45.587647/ckpt-epoch-0010.pth'
+cfg.CONST.WEIGHTS = '/kaggle/input/model/pytorch/default/1/best-ckpt.pth'
 checkpoint = torch.load(cfg.CONST.WEIGHTS, map_location=torch.device('cpu'))
 
 fix_checkpoint = {}
@@ -40,7 +40,7 @@ decoder.eval()
 refiner.eval()
 merger.eval()
 
-img1_path = '/home/matteo/AI and Robotics/CV/pix2vox-gen/dataset/ShapeNetRendering/02691156/1a04e3eab45ca15dd86060f189eb133/rendering/06.png'
+img1_path = '/kaggle/input/shapenet/ShapeNetRendering/ShapeNetRendering/02691156/10155655850468db78d106ce0a280f87/rendering/00.png'
 img1_np = cv2.imread(img1_path)
 
 sample = np.array([img1_np])
@@ -75,8 +75,5 @@ generated_volume = generated_volume.squeeze(0)
 
 img_dir= 'output_images'
 gv = generated_volume.cpu().numpy()
-gv_new = np.swapaxes(gv, 2, 1)
-rendering_views = utils.binvox_visualization.get_volume_views(gv_new)
-# Save the rendevig view to the output directory
-img = Image.fromarray(rendering_views)
-img.save(os.path.join(img_dir, 'rendering_views.png'))
+rendering_views = utils.binvox_visualization.get_volume_views_cv2(gv, os.path.join(img_dir, 'test'),epoch_idx)
+rendering_views = np.swapaxes(rendering_views, 2, 0)
