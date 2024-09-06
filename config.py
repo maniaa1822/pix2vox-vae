@@ -63,7 +63,7 @@ __C.CONST.BATCH_SIZE                        = 16
 __C.CONST.N_VIEWS_RENDERING                 = 1         # Dummy property for Pascal 3D
 __C.CONST.CROP_IMG_W                        = 128       # Dummy property for Pascal 3D
 __C.CONST.CROP_IMG_H                        = 128       # Dummy property for Pascal 3D
-
+__C.CONST.WEIGHTS                           = '/home/matteo/AI_and_Robotics/CV/pix2vox-gen/output/kaggle_checkpoints/best-ckpt.pth'
 #
 # Directories
 #

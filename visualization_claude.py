@@ -1,77 +1,93 @@
-import os
 import torch
+import torch.nn as nn
+import torchvision.transforms as transforms
+from torch.utils.data import DataLoader
+from sklearn.manifold import TSNE
+import matplotlib.pyplot as plt
 import numpy as np
-from PIL import Image
-from utils.binvox_visualization import get_volume_views
-from test_net import test_net, make_grid_image
+import json
+from tqdm import tqdm
+
+from config import cfg
 from models.encoder import Encoder
-from models.decoder import Decoder
-from models.refiner import Refiner
-from models.merger import Merger
-from utils.network_utils import var_or_cuda
+import utils.data_loaders
+import utils.data_transforms
 
-class Visualizer:
-    def __init__(self, config):
-        self.cfg = config
-        self.encoder = Encoder(config)
-        self.decoder = Decoder(config)
-        self.refiner = Refiner(config)
-        self.merger = Merger(config)
+def visualize_latent_space(cfg, encoder, test_data_loader, taxonomies):
+    encoder.eval()
+    latent_vectors = []
+    labels = []
+    
+    with torch.no_grad():
+        for taxonomy_id, sample_name, rendering_images, _ in tqdm(test_data_loader, desc="Processing samples"):
+            rendering_images = rendering_images.cuda()
+            mu, _, _ = encoder(rendering_images)
+            latent_vectors.append(mu.cpu().numpy())
+            labels.extend([taxonomies[tid]['taxonomy_name'] for tid in taxonomy_id])
 
-        if torch.cuda.is_available():
-            self.encoder = torch.nn.DataParallel(self.encoder).cuda()
-            self.decoder = torch.nn.DataParallel(self.decoder).cuda()
-            self.refiner = torch.nn.DataParallel(self.refiner).cuda()
-            self.merger = torch.nn.DataParallel(self.merger).cuda()
+    latent_vectors = np.concatenate(latent_vectors, axis=0)
+    
+    print(f"Number of latent vectors: {len(latent_vectors)}")
+    print(f"Number of labels: {len(labels)}")
+    
+    # Perform t-SNE
+    tsne = TSNE(n_components=2, random_state=42)
+    latent_2d = tsne.fit_transform(latent_vectors)
 
-        print('[INFO] Loading weights from %s ...' % config.CONST.WEIGHTS)
-        checkpoint = torch.load(config.CONST.WEIGHTS)
-        self.encoder.load_state_dict(checkpoint['encoder_state_dict'])
-        self.decoder.load_state_dict(checkpoint['decoder_state_dict'])
-        if config.NETWORK.USE_REFINER:
-            self.refiner.load_state_dict(checkpoint['refiner_state_dict'])
-        if config.NETWORK.USE_MERGER:
-            self.merger.load_state_dict(checkpoint['merger_state_dict'])
+    # Plot
+    plt.figure(figsize=(12, 8))
+    unique_labels = list(set(labels))
+    colors = plt.cm.rainbow(np.linspace(0, 1, len(unique_labels)))
+    for label, color in zip(unique_labels, colors):
+        mask = np.array(labels) == label
+        plt.scatter(latent_2d[mask, 0], latent_2d[mask, 1], c=[color], label=label, alpha=0.7)
+    
+    plt.legend()
+    plt.title("VAE Latent Space Visualization")
+    plt.xlabel("t-SNE dimension 1")
+    plt.ylabel("t-SNE dimension 2")
+    plt.tight_layout()
+    plt.savefig("latent_space_visualization.png")
+    plt.close()
 
-        self.encoder.eval()
-        self.decoder.eval()
-        self.refiner.eval()
-        self.merger.eval()
+def main():
+    # Load taxonomies
+    with open(cfg.DATASETS[cfg.DATASET.TEST_DATASET.upper()].TAXONOMY_FILE_PATH, encoding='utf-8') as file:
+        taxonomies = json.loads(file.read())
+    taxonomies = {t['taxonomy_id']: t for t in taxonomies}
 
-    def visualize(self, images, output_dir):
-        with torch.no_grad():
-            images = var_or_cuda(images)
-            mu, log_sigma, z = self.encoder(images)
-            raw_features, generated_volume = self.decoder(z)
+    # Set up data transforms
+    IMG_SIZE = cfg.CONST.IMG_H, cfg.CONST.IMG_W
+    CROP_SIZE = cfg.CONST.CROP_IMG_H, cfg.CONST.CROP_IMG_W
+    test_transforms = utils.data_transforms.Compose([
+        utils.data_transforms.CenterCrop(IMG_SIZE, CROP_SIZE),
+        utils.data_transforms.RandomBackground(cfg.TEST.RANDOM_BG_COLOR_RANGE),
+        utils.data_transforms.Normalize(mean=cfg.DATASET.MEAN, std=cfg.DATASET.STD),
+        utils.data_transforms.ToTensor(),
+    ])
 
-            if self.cfg.NETWORK.USE_MERGER and self.cfg.TRAIN.EPOCH_START_USE_MERGER >= 0:
-                generated_volume = self.merger(raw_features, generated_volume)
-            else:
-                generated_volume = torch.mean(generated_volume, dim=1)
+    # Set up data loader
+    dataset_loader = utils.data_loaders.DATASET_LOADER_MAPPING[cfg.DATASET.TEST_DATASET](cfg)
+    test_data_loader = torch.utils.data.DataLoader(
+        dataset=dataset_loader.get_dataset(utils.data_loaders.DatasetType.TEST, cfg.CONST.N_VIEWS_RENDERING, test_transforms),
+        batch_size=cfg.CONST.BATCH_SIZE,
+        num_workers=1,
+        pin_memory=True,
+        shuffle=False
+    )
 
-            if self.cfg.NETWORK.USE_REFINER and self.cfg.TRAIN.EPOCH_START_USE_REFINER >= 0:
-                generated_volume = self.refiner(generated_volume)
+    # Set up network
+    encoder = Encoder(cfg)
+    if torch.cuda.is_available():
+        encoder = torch.nn.DataParallel(encoder).cuda()
 
-            gv = generated_volume.cpu().numpy()
-            rendering_views = get_volume_views(gv, os.path.join(output_dir, 'test'), -1)
-            grid_image = make_grid_image(rendering_views)
-            Image.fromarray(grid_image).save(os.path.join(output_dir, 'visualization.png'))
+    # Load pre-trained weights
+    print('Loading weights from %s ...' % cfg.CONST.WEIGHTS)
+    checkpoint = torch.load(cfg.CONST.WEIGHTS)
+    encoder.load_state_dict(checkpoint['encoder_state_dict'])
 
-            return generated_volume
+    # Visualize latent space
+    visualize_latent_space(cfg, encoder, test_data_loader, taxonomies)
 
-# Usage example
-if __name__ == "__main__":
-    from utils.config import cfg
-    visualizer = Visualizer(cfg)
-
-    # Load input images
-    input_images = [np.array(Image.open('input_image1.png')),
-                    np.array(Image.open('input_image2.png')),
-                    np.array(Image.open('input_image3.png'))]
-    input_images = torch.Tensor(input_images)
-
-    # Visualize the 3D result
-    output_dir = 'path/to/output/directory'
-    os.makedirs(output_dir, exist_ok=True)
-    generated_volume = visualizer.visualize(input_images, output_dir)
-    print('Visualization saved to:', os.path.join(output_dir, 'visualization.png'))
+if __name__ == '__main__':
+    main()
