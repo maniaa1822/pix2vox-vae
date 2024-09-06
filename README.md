@@ -1,4 +1,4 @@
-# Pix2Vox++ VAE: 3D Object Reconstruction with Variational Autoencoder
+# Pix2Vox VAE: 3D Object Reconstruction with Variational Autoencoder
 
 This project is a reimplementation and modification of the paper "Pix2Vox: Multi-scale Context-aware 3D Object Reconstruction from Single and Multiple Images" with a significant change to the encoder-decoder architecture, transforming it into a Variational Autoencoder (VAE).
 
@@ -55,7 +55,7 @@ python3 runner.py --test --weights=/path/to/pretrained/model.pth
 
 ## Model Architecture
 
-This implementation differs from the original Pix2Vox++ in the following ways:
+This implementation differs from the original Pix2Vox in the following ways:
 
 1. Encoder: It is based on a modified version of VGG16 with batch normalization (VGG16_bn). It processes multi-view 2D images as input and extracts features through a series of convolutional layers. The encoder architecture is composed of the following key components:
    1. **Input**: Multi-view images of 3D objects
