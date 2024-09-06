@@ -49,95 +49,59 @@ python3 runner.py --test --weights=/path/to/pretrained/model.pth
 
 ## Model Architecture
 
-This implementation differs from the original Pix2Vox in the following ways:
+Our implementation differs significantly from the original Pix2Vox by incorporating a Variational Autoencoder (VAE) architecture. This modification allows for more robust and generative 3D reconstructions. Here's a detailed breakdown of our model:
 
-1. Encoder: It is based on a modified version of VGG16 with batch normalization (VGG16_bn). It processes multi-view 2D images as input and extracts features through a series of convolutional layers. The encoder architecture is composed of the following key components:
-   1. **Input**: Multi-view images of 3D objects
-   - Shape: [batch_size, n_views, channels, height, width]
+### 1. Encoder
 
-   2. **Feature Extraction**:
-      - Base: Pre-trained VGG16 with batch normalization (first 27 layers)
-      - Additional layers:
-         - Conv2D → BatchNorm → ELU
-         - Conv2D → BatchNorm → ELU → MaxPool
-         - Conv2D (1x1) → BatchNorm → ELU
+The encoder is based on a modified VGG16 with batch normalization (VGG16_bn), designed to process multi-view 2D images and extract meaningful features.
 
-   3. **Multi-view Processing**:
-      - Each view processed independently
-      - Features aggregated by mean across views
+- **Feature Extraction**:
+  - Base: Pre-trained VGG16 with batch normalization (first 27 layers)
+  - Additional layers:
+    - Conv2D → BatchNorm → ELU
+    - Conv2D → BatchNorm → ELU → MaxPool
+    - Conv2D (1x1) → BatchNorm → ELU
+- **Latent Space Projection**:
+  - fc_mu: Produces mean (μ)
+  - fc_log_sigma: Produces log standard deviation (log σ)
+- **Reparameterization**: Samples latent vector z using μ and σ
 
-   4. **Latent Space Projection**:
-      - Two fully connected layers:
-      - fc_mu: Produces mean (μ)
-      - fc_log_sigma: Produces log standard deviation (log σ)
+**Outputs**: μ (mean), log σ (log standard deviation), z (sampled latent vector)
 
-   5. **Reparameterization**:
-      - Samples latent vector z using μ and σ
+### 2. Decoder
 
-Outputs:
-- μ (mean of latent distribution)
-- log σ (log standard deviation of latent distribution)
-- z (sampled latent vector)
+The decoder reconstructs 3D volumes from the latent representation.
 
-2. Decoder: it is the part of a Variational Autoencoder (VAE) designed to reconstruct 3D volumes from a latent representation. the key components are the following:
-   1. **Input**: Latent vector z
-      - Dimension: [batch_size, latent_dim]
+- **Initial Transformation**:
+  - Fully connected layer: Transforms z to 2048 * 2 * 2 * 2 dimensions
+  - Reshaped to [batch_size, 2048, 2, 2, 2]
+- **3D Deconvolution Layers**:
+  1. ConvTranspose3d(2048 → 512) → BatchNorm3d → ReLU
+  2. ConvTranspose3d(512 → 128) → BatchNorm3d → ReLU
+  3. ConvTranspose3d(128 → 32) → BatchNorm3d → ReLU
+  4. ConvTranspose3d(32 → 8) → BatchNorm3d → ReLU
+  5. ConvTranspose3d(8 → 1) → Sigmoid
 
-   2. **Initial Transformation**:
-      - Fully connected layer: Transforms z to 2048 * 2 * 2 * 2 dimensions
-      - Reshaped to [batch_size, 2048, 2, 2, 2]
+**Outputs**:
+- raw_features
+- gen_volumes (Final reconstructed 3D volumes)
 
-   3. **3D Deconvolution Layers**:
-      - Layer 1: ConvTranspose3d(2048 → 512) → BatchNorm3d → ReLU
-      - Layer 2: ConvTranspose3d(512 → 128) → BatchNorm3d → ReLU
-      - Layer 3: ConvTranspose3d(128 → 32) → BatchNorm3d → ReLU
-      - Layer 4: ConvTranspose3d(32 → 8) → BatchNorm3d → ReLU
-      - Layer 5: ConvTranspose3d(8 → 1) → Sigmoid
+### 3. Latent Space
 
-   4. **Multi-view Processing**:
-      - Features replicated for each view
-      - Processed independently through deconvolution layers
+The latent space is a crucial component of our VAE architecture, enabling the generation of diverse and realistic 3D reconstructions.
 
-Outputs:
-- raw_features: [batch_size, n_views, 9, 32, 32, 32]
-   - Combines features from Layer 4 and final output
-- gen_volumes: [batch_size, n_views, 32, 32, 32]
-   - Final reconstructed 3D volumes
+- **Encoding Process**:
+  - Encoder projects input to μ and log(σ) for each latent dimension
+- **Sampling**:
+  - z = μ + ε * exp(log(σ)), where ε ~ N(0, 1)
+  - Allows backpropagation through random sampling (reparameterization trick)
+- **Decoding Process**:
+  - Sampled z is transformed to initial 3D shape (2048 * 2 * 2 * 2)
+  - Subsequent layers reconstruct full 3D object representation
+- **Training Objectives**:
+  - Reconstruction loss: Ensures decoded output matches input
+  - KL divergence loss: Regularizes latent space to approximate N(0, I)
 
-
-3. Latent Space: the usage in the VAE pipline is:
-   1. **Encoding Process**:
-      - The encoder takes multi-view 3D object representations as input
-      - Outputs μ and log(σ) for each latent dimension
-      - `self.fc_mu` and `self.fc_log_sigma` in the encoder perform this projection
-
-   2. **Sampling from Latent Space**:
-      - A point z is sampled from the latent distribution using the reparameterization trick:
-        z = μ + ε * exp(log(σ)), where ε ~ N(0, 1)
-      - This allows for backpropagation through the random sampling process
-
-   3. **Decoding Process**:
-      - The sampled z is input to the decoder
-      - `self.fc` in the decoder transforms z to the initial 3D shape (2048 * 2 * 2 * 2)
-      - Subsequent layers reconstruct the full 3D object representation
-
-   4. **Training Objectives**:
-      - Reconstruction loss: Ensures decoded output matches input
-      - KL divergence loss: Regularizes latent space to be close to N(0, I)
-      - These competing objectives create a meaningful and structured latent space
-
-   5. **Multi-view Handling**:
-      - The latent space encodes information from multiple views
-      - During decoding, the latent vector is replicated for each view:
-        `x = x.unsqueeze(1).repeat(1, n_views, 1, 1, 1, 1)`
-
-   6. **Generative Capabilities**:
-      - New 3D objects can be generated by sampling random points from the latent space
-      - Interpolation between existing objects is possible by interpolating their latent representations
-
-   7. **Feature Analysis**:
-      - The latent space can be analyzed to understand key features of 3D objects
-      - Dimensions might correspond to interpretable attributes (e.g., shape, size, orientation)
 
 
 ## Results
