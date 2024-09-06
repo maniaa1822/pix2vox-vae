@@ -4,7 +4,7 @@ This project is a reimplementation and modification of the paper "Pix2Vox: Multi
 
 ## Overview
 
-**Pix2Vox VAE: A Novel Approach to 3D Object Reconstruction**
+### Pix2Vox VAE: A Novel Approach to 3D Object Reconstruction
 
 This project presents a significant advancement in 3D object reconstruction by combining the strengths of Pix2Vox and variational autoencoders (VAEs). Pix2Vox is a state-of-the-art method for reconstructing 3D objects from single or multiple images, known for its ability to capture multi-scale context. VAEs, on the other hand, are generative models that can learn a latent representation of data, enabling tasks like generation and interpolation.
 
