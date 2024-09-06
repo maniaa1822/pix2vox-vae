@@ -4,8 +4,6 @@ This project is a reimplementation and modification of the paper "Pix2Vox: Multi
 
 ## Overview
 
-### Pix2Vox VAE: A Novel Approach to 3D Object Reconstruction
-
 This project presents a significant advancement in 3D object reconstruction by combining the strengths of Pix2Vox and variational autoencoders (VAEs). Pix2Vox is a state-of-the-art method for reconstructing 3D objects from single or multiple images, known for its ability to capture multi-scale context. VAEs, on the other hand, are generative models that can learn a latent representation of data, enabling tasks like generation and interpolation.
 
 Our implementation builds upon the original Pix2Vox architecture, introducing a VAE-based encoder-decoder structure. This modification allows the model to learn a latent representation of the input images, which is then used to generate the 3D object. By leveraging the multi-scale context-aware approach of Pix2Vox, our model can capture fine-grained details and reconstruct complex 3D objects accurately.
@@ -51,7 +49,7 @@ python3 runner.py --test --weights=/path/to/pretrained/model.pth
 
 Our implementation differs significantly from the original Pix2Vox by incorporating a Variational Autoencoder (VAE) architecture. This modification allows for more robust and generative 3D reconstructions. Here's a detailed breakdown of our model:
 
-### 1. Encoder
+#### 1. Encoder
 
 The encoder is based on a modified VGG16 with batch normalization (VGG16_bn), designed to process multi-view 2D images and extract meaningful features.
 
@@ -68,7 +66,7 @@ The encoder is based on a modified VGG16 with batch normalization (VGG16_bn), de
 
 **Outputs**: μ (mean), log σ (log standard deviation), z (sampled latent vector)
 
-### 2. Decoder
+#### 2. Decoder
 
 The decoder reconstructs 3D volumes from the latent representation.
 
@@ -86,7 +84,7 @@ The decoder reconstructs 3D volumes from the latent representation.
 - raw_features
 - gen_volumes (Final reconstructed 3D volumes)
 
-### 3. Latent Space
+#### 3. Latent Space
 
 The latent space is a crucial component of our VAE architecture, enabling the generation of diverse and realistic 3D reconstructions.
 
@@ -101,7 +99,6 @@ The latent space is a crucial component of our VAE architecture, enabling the ge
 - **Training Objectives**:
   - Reconstruction loss: Ensures decoded output matches input
   - KL divergence loss: Regularizes latent space to approximate N(0, I)
-
 
 
 ## Results
