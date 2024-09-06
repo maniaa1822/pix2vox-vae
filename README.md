@@ -49,7 +49,7 @@ python3 runner.py --test --weights=/path/to/pretrained/model.pth
 
 Our implementation differs significantly from the original Pix2Vox by incorporating a Variational Autoencoder (VAE) architecture. This modification allows for more robust and generative 3D reconstructions. Here's a detailed breakdown of our model:
 
-#### 1. Encoder
+### 1. Encoder
 
 The encoder is based on a modified VGG16 with batch normalization (VGG16_bn), designed to process multi-view 2D images and extract meaningful features.
 
@@ -66,7 +66,7 @@ The encoder is based on a modified VGG16 with batch normalization (VGG16_bn), de
 
 **Outputs**: μ (mean), log σ (log standard deviation), z (sampled latent vector)
 
-#### 2. Decoder
+### 2. Decoder
 
 The decoder reconstructs 3D volumes from the latent representation.
 
@@ -84,7 +84,7 @@ The decoder reconstructs 3D volumes from the latent representation.
 - raw_features
 - gen_volumes (Final reconstructed 3D volumes)
 
-#### 3. Latent Space
+### 3. Latent Space
 
 The latent space is a crucial component of our VAE architecture, enabling the generation of diverse and realistic 3D reconstructions.
 
