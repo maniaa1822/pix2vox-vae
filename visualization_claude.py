@@ -13,7 +13,7 @@ from models.encoder import Encoder
 import utils.data_loaders
 import utils.data_transforms
 
-def visualize_latent_space(cfg, encoder, test_data_loader, taxonomies):
+def visualize_latent_space_2d(cfg, encoder, test_data_loader, taxonomies):
     encoder.eval()
     latent_vectors = []
     labels = []
@@ -48,6 +48,45 @@ def visualize_latent_space(cfg, encoder, test_data_loader, taxonomies):
     plt.ylabel("t-SNE dimension 2")
     plt.tight_layout()
     plt.savefig("latent_space_visualization.png")
+    plt.close()
+    
+def vizualize_latent_space_3d(cfg, encoder, test_data_loader, taxonomies):
+    encoder.eval()
+    latent_vectors = []
+    labels = []
+    
+    with torch.no_grad():
+        for taxonomy_id, sample_name, rendering_images, _ in tqdm(test_data_loader, desc="Processing samples"):
+            rendering_images = rendering_images.cuda()
+            mu, _, _ = encoder(rendering_images)
+            latent_vectors.append(mu.cpu().numpy())
+            labels.extend([taxonomies[tid]['taxonomy_name'] for tid in taxonomy_id])
+
+    latent_vectors = np.concatenate(latent_vectors, axis=0)
+    
+    print(f"Number of latent vectors: {len(latent_vectors)}")
+    print(f"Number of labels: {len(labels)}")
+    
+    # Perform t-SNE
+    tsne = TSNE(n_components=3, random_state=42)
+    latent_3d = tsne.fit_transform(latent_vectors)
+
+    # Plot
+    fig = plt.figure(figsize=(12, 8))
+    ax = fig.add_subplot(111, projection='3d')
+    unique_labels = list(set(labels))
+    colors = plt.cm.rainbow(np.linspace(0, 1, len(unique_labels)))
+    for label, color in zip(unique_labels, colors):
+        mask = np.array(labels) == label
+        ax.scatter(latent_3d[mask, 0], latent_3d[mask, 1], latent_3d[mask, 2], c=[color], label=label, alpha=0.7)
+    
+    ax.legend()
+    ax.set_title("VAE Latent Space Visualization")
+    ax.set_xlabel("t-SNE dimension 1")
+    ax.set_ylabel("t-SNE dimension 2")
+    ax.set_zlabel("t-SNE dimension 3")
+    plt.tight_layout()
+    plt.savefig("latent_space_visualization_3d.png")
     plt.close()
 
 def main():
@@ -87,7 +126,8 @@ def main():
     encoder.load_state_dict(checkpoint['encoder_state_dict'])
 
     # Visualize latent space
-    visualize_latent_space(cfg, encoder, test_data_loader, taxonomies)
+    visualize_latent_space_2d(cfg, encoder, test_data_loader, taxonomies)
+    vizualize_latent_space_3d(cfg, encoder, test_data_loader, taxonomies)
 
 if __name__ == '__main__':
     main()
