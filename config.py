@@ -16,17 +16,17 @@ __C.DATASETS.SHAPENET                       = edict()
 #kaggle datasets directory (gabriele)
 __C.DATASETS.SHAPENET.TAXONOMY_FILE_PATH    = '/kaggle/working/pix2vox-vae/datasets/ShapeNet.json'
 #matteo datasets directory
-__C.DATASETS.SHAPENET.TAXONOMY_FILE_PATH    = '/home/matteo/AI_and_Robotics/CV/pix2vox-gen/datasets/ShapeNet-f.json'
+#__C.DATASETS.SHAPENET.TAXONOMY_FILE_PATH    = '/home/matteo/AI_and_Robotics/CV/pix2vox-gen/datasets/ShapeNet.json'
 
 #kaggle datasets directory (gabriele)
 __C.DATASETS.SHAPENET.RENDERING_PATH        = '/kaggle/input/shapenet/ShapeNetRendering/ShapeNetRendering/%s/%s/rendering/%02d.png'
 #matteo datasets directory
-__C.DATASETS.SHAPENET.RENDERING_PATH        = '/home/matteo/AI_and_Robotics/CV/datasets/ShapeNetRendering/%s/%s/rendering/%02d.png'
+#__C.DATASETS.SHAPENET.RENDERING_PATH        = '/home/matteo/AI_and_Robotics/CV/datasets/ShapeNetRendering/%s/%s/rendering/%02d.png'
 
 #kaggle datasets directory (gabriele)
 __C.DATASETS.SHAPENET.VOXEL_PATH            = '/kaggle/input/shapenet/ShapeNetVox32/ShapeNetVox32/%s/%s/model.binvox'
 #matteo datasets directory
-__C.DATASETS.SHAPENET.VOXEL_PATH            = '/home/matteo/AI_and_Robotics/CV/datasets/ShapeNetVox32/%s/%s/model.binvox'
+#_C.DATASETS.SHAPENET.VOXEL_PATH            = '/home/matteo/AI_and_Robotics/CV/datasets/ShapeNetVox32/%s/%s/model.binvox'
 
 __C.DATASETS.PASCAL3D                       = edict()
 __C.DATASETS.PASCAL3D.TAXONOMY_FILE_PATH    = './datasets/Pascal3D.json'
@@ -59,11 +59,11 @@ __C.CONST.RNG_SEED                          = 0
 __C.CONST.IMG_W                             = 224       # Image width for input
 __C.CONST.IMG_H                             = 224       # Image height for input
 __C.CONST.N_VOX                             = 32
-__C.CONST.BATCH_SIZE                        = 16
+__C.CONST.BATCH_SIZE                        = 64
 __C.CONST.N_VIEWS_RENDERING                 = 1         # Dummy property for Pascal 3D
 __C.CONST.CROP_IMG_W                        = 128       # Dummy property for Pascal 3D
 __C.CONST.CROP_IMG_H                        = 128       # Dummy property for Pascal 3D
-__C.CONST.WEIGHTS                           = '/home/matteo/AI_and_Robotics/CV/pix2vox-gen/output/kaggle_checkpoints/best-ckpt.pth'
+#__C.CONST.WEIGHTS                           = '/home/matteo/AI_and_Robotics/CV/pix2vox-gen/output/kaggle_checkpoints/best-ckpt.pth'
 #
 # Directories
 #

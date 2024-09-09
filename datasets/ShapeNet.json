@@ -21793,6 +21793,7 @@
 		]
 	},
 	{
+<<<<<<< HEAD
 		"taxonomy_id": "03211117",
 		"taxonomy_name": "display",
 		"baseline": {
@@ -26875,6 +26876,8 @@
 		]
 	},
 	{
+=======
+>>>>>>> d97c0ff (kaggle training commit)
 		"taxonomy_id": "04090263",
 		"taxonomy_name": "rifle",
 		"baseline": {
