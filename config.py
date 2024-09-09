@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
-#
-# Developed by Haozhe Xie <cshzxie@gmail.com>
+# Define the file path
+file_path = '/kaggle/working/pix2vox-vae/config.py'
 
-from easydict import EasyDict as edict
+# Step 1: Define the new content for the file
+new_content = """from easydict import EasyDict as edict
 
 __C                                         = edict()
 cfg                                         = __C
@@ -12,32 +12,11 @@ cfg                                         = __C
 #
 __C.DATASETS                                = edict()
 __C.DATASETS.SHAPENET                       = edict()
-
-#kaggle datasets directory (gabriele)
 __C.DATASETS.SHAPENET.TAXONOMY_FILE_PATH    = '/kaggle/working/pix2vox-vae/datasets/ShapeNet-5.json'
-#matteo datasets directory
-#__C.DATASETS.SHAPENET.TAXONOMY_FILE_PATH    = '/home/matteo/AI_and_Robotics/CV/pix2vox-gen/datasets/ShapeNet.json'
-
-#kaggle datasets directory (gabriele)
+# __C.DATASETS.SHAPENET.TAXONOMY_FILE_PATH  = './datasets/PascalShapeNet.json'
 __C.DATASETS.SHAPENET.RENDERING_PATH        = '/kaggle/input/shapenet/ShapeNetRendering/ShapeNetRendering/%s/%s/rendering/%02d.png'
-#matteo datasets directory
-#__C.DATASETS.SHAPENET.RENDERING_PATH        = '/home/matteo/AI_and_Robotics/CV/datasets/ShapeNetRendering/%s/%s/rendering/%02d.png'
-
-#kaggle datasets directory (gabriele)
+# __C.DATASETS.SHAPENET.RENDERING_PATH      = '/home/hzxie/Datasets/ShapeNet/PascalShapeNetRendering/%s/%s/render_%04d.jpg'
 __C.DATASETS.SHAPENET.VOXEL_PATH            = '/kaggle/input/shapenet/ShapeNetVox32/ShapeNetVox32/%s/%s/model.binvox'
-#matteo datasets directory
-#_C.DATASETS.SHAPENET.VOXEL_PATH            = '/home/matteo/AI_and_Robotics/CV/datasets/ShapeNetVox32/%s/%s/model.binvox'
-
-__C.DATASETS.PASCAL3D                       = edict()
-__C.DATASETS.PASCAL3D.TAXONOMY_FILE_PATH    = './datasets/Pascal3D.json'
-__C.DATASETS.PASCAL3D.ANNOTATION_PATH       = '/home/hzxie/Datasets/PASCAL3D/Annotations/%s_imagenet/%s.mat'
-__C.DATASETS.PASCAL3D.RENDERING_PATH        = '/home/hzxie/Datasets/PASCAL3D/Images/%s_imagenet/%s.JPEG'
-__C.DATASETS.PASCAL3D.VOXEL_PATH            = '/home/hzxie/Datasets/PASCAL3D/CAD/%s/%02d.binvox'
-__C.DATASETS.PIX3D                          = edict()
-__C.DATASETS.PIX3D.TAXONOMY_FILE_PATH       = './datasets/Pix3D.json'
-__C.DATASETS.PIX3D.ANNOTATION_PATH          = '/Users/gabrielescognamiglio/Desktop/Pix2Vox/pix3d/pix3d.json'
-__C.DATASETS.PIX3D.RENDERING_PATH           = '/Users/gabrielescognamiglio/Desktop/Pix2Vox/pix3d/img/%s/%s.%s'
-__C.DATASETS.PIX3D.VOXEL_PATH               = '/Users/gabrielescognamiglio/Desktop/Pix2Vox/pix3d/model/%s/%s/%s.binvox'
 
 #
 # Dataset
@@ -63,7 +42,7 @@ __C.CONST.BATCH_SIZE                        = 64
 __C.CONST.N_VIEWS_RENDERING                 = 1         # Dummy property for Pascal 3D
 __C.CONST.CROP_IMG_W                        = 128       # Dummy property for Pascal 3D
 __C.CONST.CROP_IMG_H                        = 128       # Dummy property for Pascal 3D
-#__C.CONST.WEIGHTS                           = '/home/matteo/AI_and_Robotics/CV/pix2vox-gen/output/kaggle_checkpoints/best-ckpt.pth'
+
 #
 # Directories
 #
@@ -84,9 +63,9 @@ __C.NETWORK.USE_MERGER                      = True
 # Training
 #
 __C.TRAIN                                   = edict()
-__C.TRAIN.RESUME_TRAIN                      = False
+__C.TRAIN.RESUME_TRAIN                      = True
 __C.TRAIN.NUM_WORKER                        = 4             # number of data workers
-__C.TRAIN.NUM_EPOCHES                       = 200
+__C.TRAIN.NUM_EPOCHES                       = 150
 __C.TRAIN.BRIGHTNESS                        = .4
 __C.TRAIN.CONTRAST                          = .4
 __C.TRAIN.SATURATION                        = .4
@@ -99,14 +78,14 @@ __C.TRAIN.ENCODER_LEARNING_RATE             = 1e-4
 __C.TRAIN.DECODER_LEARNING_RATE             = 1e-4
 __C.TRAIN.REFINER_LEARNING_RATE             = 1e-3
 __C.TRAIN.MERGER_LEARNING_RATE              = 1e-4
-__C.TRAIN.ENCODER_LR_MILESTONES             = [150]
-__C.TRAIN.DECODER_LR_MILESTONES             = [150]
-__C.TRAIN.REFINER_LR_MILESTONES             = [150]
-__C.TRAIN.MERGER_LR_MILESTONES              = [150]
+__C.TRAIN.ENCODER_LR_MILESTONES             = [100]
+__C.TRAIN.DECODER_LR_MILESTONES             = [100]
+__C.TRAIN.REFINER_LR_MILESTONES             = [100]
+__C.TRAIN.MERGER_LR_MILESTONES              = [100]
 __C.TRAIN.BETAS                             = (.9, .999)
 __C.TRAIN.MOMENTUM                          = .9
 __C.TRAIN.GAMMA                             = .5
-__C.TRAIN.SAVE_FREQ                         = 10            # weights will be overwritten every save_freq epoch
+__C.TRAIN.SAVE_FREQ                         = 15            # weights will be overwritten every save_freq epoch
 __C.TRAIN.UPDATE_N_VIEWS_RENDERING          = False
 
 #
@@ -115,3 +94,10 @@ __C.TRAIN.UPDATE_N_VIEWS_RENDERING          = False
 __C.TEST                                    = edict()
 __C.TEST.RANDOM_BG_COLOR_RANGE              = [[240, 240], [240, 240], [240, 240]]
 __C.TEST.VOXEL_THRESH                       = [.2, .3, .4, .5]
+"""
+
+# Step 2: Write the new content to the file
+with open(file_path, 'w') as file:
+    file.write(new_content)
+
+print(f"File {file_path} has been created or overwritten with new content.")
