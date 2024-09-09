@@ -2,6 +2,11 @@
 
 This project is a reimplementation and modification of the paper "Pix2Vox: Multi-scale Context-aware 3D Object Reconstruction from Single and Multiple Images" with a significant change to the encoder-decoder architecture, transforming it into a Variational Autoencoder (VAE).
 
+<p align="center">
+<img src=".\img\pix2vox.png" height = "202" alt="" align=center />
+<br><br>
+</p>
+
 ## Overview
 
 This project presents a significant advancement in 3D object reconstruction by combining the strengths of Pix2Vox and variational autoencoders (VAEs). Pix2Vox is a state-of-the-art method for reconstructing 3D objects from single or multiple images, known for its ability to capture multi-scale context. VAEs, on the other hand, are generative models that can learn a latent representation of data, enabling tasks like generation and interpolation.
