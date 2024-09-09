@@ -167,10 +167,14 @@ Future work could focus on further optimizing the VAE architecture, exploring di
 
 
 ```
-@inproceedings{xie2020pix2vox++,
-  title={Pix2Vox++: Multi-scale Context-aware 3D Object Reconstruction from Single and Multiple Images},
-  author={Xie, Haozhe and Yao, Hongxun and Sun, Xiaoshuai and Zhou, Shangchen and Zhang, Shengping},
-  booktitle={International Journal of Computer Vision},
-  year={2020}
+@inproceedings{xie2019pix2vox,
+  title={Pix2Vox: Context-aware 3D Reconstruction from Single and Multi-view Images},
+  author={Xie, Haozhe and 
+          Yao, Hongxun and 
+          Sun, Xiaoshuai and 
+          Zhou, Shangchen and 
+          Zhang, Shengping},
+  booktitle={ICCV},
+  year={2019}
 }
 ```
