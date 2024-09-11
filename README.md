@@ -120,12 +120,25 @@ Our implementation of Pix2Vox with a VAE architecture has shown promising result
 
 We evaluated our model on three key object categories: aeroplanes, cars, and chairs. The following table presents our results, showing scores at various thresholds (t):
 
-| Taxonomy  | #Sample | Baseline | t=0.20 | t=0.30 | t=0.40 | t=0.50 |
-|-----------|---------|----------|--------|--------|--------|--------|
-| aeroplane | 810     | 0.5130   | 0.5367 | 0.5614 | 0.5619 | 0.5441 |
-| car       | 1501    | 0.7980   | 0.8210 | 0.8333 | 0.8348 | 0.8284 |
-| chair     | 1357    | 0.4660   | 0.5035 | 0.5094 | 0.4960 | 0.4678 |
-| Overall   |         |          | 0.6407 | 0.6534 | 0.6492 | 0.6322 |
+Table 1: Test Results for Furniture and Home Objects
+
+| Taxonomy | #Sample | Baseline | t=0.20 | t=0.30 | t=0.40 | t=0.50 |
+|----------|---------|----------|--------|--------|--------|--------|
+| bench    | 181     | 0.4210   | 0.4763 | 0.5056 | 0.4999 | 0.4634 |
+| cabinet  | 157     | 0.7160   | 0.7571 | 0.7715 | 0.7753 | 0.7704 |
+| speaker  | 161     | 0.6620   | 0.6759 | 0.6888 | 0.6883 | 0.6775 |
+| sofa     | 317     | 0.6280   | 0.6589 | 0.6845 | 0.6931 | 0.6859 |
+| table    | 850     | 0.5130   | 0.5435 | 0.5657 | 0.5685 | 0.5566 |
+| Overall  |         |          | 0.5911 | 0.6131 | 0.6158 | 0.6029 |
+
+Table 2: Test Results for Vehicles and Watercraft
+
+| Taxonomy   | #Sample | Baseline | t=0.20 | t=0.30 | t=0.40 | t=0.50 |
+|------------|---------|----------|--------|--------|--------|--------|
+| aeroplane  | 404     | 0.5130   | 0.5750 | 0.6020 | 0.6041 | 0.5904 |
+| car        | 749     | 0.7980   | 0.8164 | 0.8342 | 0.8418 | 0.8416 |
+| watercraft | 193     | 0.5130   | 0.5604 | 0.5871 | 0.5925 | 0.5802 |
+| Overall    |         |          | 0.7072 | 0.7291 | 0.7347 | 0.7287 |
 
 #### Understanding the Voxelization Threshold (t)
 
