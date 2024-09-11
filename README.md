@@ -156,14 +156,20 @@ By providing results at multiple thresholds, we offer a comprehensive view of ou
 
 ### Visual Results
 
-<table align="center">
+<table>
   <tr>
-    <td><img src="./img/plane.png" height="250" alt="Volume Ground-Truth"/></td>
-    <td><img src="./img/plane-rec.png" height="250" alt="Volume Reconstructed"/></td>
+    <td><img src="./img/plane.png" alt="Ground Truth 1" /></td>
+    <td><img src="./img/img.png" alt="Ground Truth 2" /></td>
+    <td><img src="./img/bench.png" alt="Ground Truth 3" /></td>
+  </tr>
+  <tr>
+    <td><img src="./img/plane-rec.png" alt="Reconstructed 1" /></td>
+    <td><img src="./img/img-rec.png" alt="Reconstructed 2" /></td>
+    <td><img src="/img/bench-rec.png" alt="Reconstructed 3" /></td>
   </tr>
 </table>
 
-*Figure 1: Example reconstruction for aeroplane.*
+*Figure 1: Comparison of ground truth (top row) and reconstructed (bottom row) 3D models for three different object categories.*
 
 ### Discussion
 
